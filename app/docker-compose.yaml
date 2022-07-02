@@ -42,7 +42,7 @@ services:
             - LETSENCRYPT_HOST=www.automotoraferrgut.cl
             - LETSENCRYPT_EMAIL=yllorca@helloworl.cl
         env_file:
-            - ../../autodir/autoweb/.env
+            - .env
         expose:
             - 8000
         volumes:
@@ -65,7 +65,7 @@ services:
             - ../../autodir/autoweb/static_cdn:/home/yllorca/autoweb/static_cdn/
 volumes:
     postgres_data:
-    static:
+    static_cdn:
         external: true
     certs:
     html:
