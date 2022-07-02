@@ -52,7 +52,7 @@ services:
             - db
     nginx:
         build:
-            context: ./nginx
+            context: ../nginx
             dockerfile: Dockerfile.nginx            
         expose:
             - 80
