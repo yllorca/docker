@@ -1,0 +1,73 @@
+version: '3.3'
+services:
+    db:
+        image: postgres
+        restart: always
+        env_file: ../autoweb/.env
+        expose:
+            - 5432
+        volumes:
+            - ./db/psql-init/db.sql:/docker-entrypoint-initdb.d/db.sql
+            - postgres_data:/var/lib/postgresql/data/
+    nginx-proxy:
+        image: jwilder/nginx-proxy
+        restart: always
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - certs:/etc/nginx/certs:ro
+            - vhostd:/etc/nginx/vhost.d
+            - html:/usr/share/nginx/html
+        labels:
+            - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    letsencrypt:
+        image: jrcs/letsencrypt-nginx-proxy-companion
+        restart: always
+        environment:
+            - NGINX_PROXY_CONTAINER=nginx-proxy
+        volumes:
+            - certs:/etc/nginx/certs:rw
+            - vhostd:/etc/nginx/vhost.d
+            - html:/usr/share/nginx/html
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+    autoweb:
+        build:
+            context: ../autoweb
+            dockerfile: Dockerfile.autoweb
+        environment:
+            - PORT=8000
+            - VIRTUAL_HOST=www.automotoraferrgut.cl
+            - LETSENCRYPT_HOST=www.automotoraferrgut.cl
+            - LETSENCRYPT_EMAIL=yllorca@helloworl.cl
+        env_file:
+            - .env
+        expose:
+            - 8000
+        volumes:
+            - static_cdn:/home/yllorca/autodir/static_cdn/
+        restart: always
+        depends_on:
+            - db
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.nginx            
+        expose:
+            - 80
+        restart: always
+        depends_on:
+            - autoweb
+            - nginx-proxy
+            - letsencrypt
+        volumes:
+            - ../../static_cdn:/home/yllorca/autodir/static_cdn/
+volumes:
+    postgres_data:
+    static:
+        external: true
+    certs:
+    html:
+    vhostd:
+
