@@ -38,8 +38,8 @@ services:
             dockerfile: Dockerfile.autoweb
         environment:
             - PORT=8000
-            - VIRTUAL_HOST=www.automotoraferrgut.cl
-            - LETSENCRYPT_HOST=www.automotoraferrgut.cl
+            - VIRTUAL_HOST=automotoraferrgut.cl,www.automotoraferrgut.cl
+            - LETSENCRYPT_HOST=automotoraferrgut.cl,www.automotoraferrgut.cl
             - LETSENCRYPT_EMAIL=yllorca@helloworl.cl
         env_file:
             - ../../autodir/autoweb/.env
