@@ -7,7 +7,6 @@ services:
             - 5432
         volumes:
             - ../db/create-multiple-postgres-databases.sh:/docker-entrypoint-initdb.d/create-multiple-postgres-databases.sh
-            - postgres_data:/var/lib/postgresql/data/
         environment:
             - POSTGRES_MULTIPLE_DATABASES=autodb,botdb
             - POSTGRES_USER=yllorca
@@ -82,7 +81,6 @@ services:
         volumes:
             - ../../autodir/autoweb/static_cdn:/home/yllorca/autoweb/static_cdn/
 volumes:
-    postgres_data:
     static_cdn:
         external: true
     static_alpaca_bot:
