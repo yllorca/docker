@@ -1,0 +1,19 @@
+FROM postgres:9.6
+
+# Create a user to avoid running containers as root in production
+RUN addgroup --system yllorca \
+    && adduser --system --ingroup yllorca yllorca
+# Install os-level dependencies (as root)
+RUN apt-get update \
+  # cleaning up unused files to reduce the image size
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
+
+# Copy entrypoint script which waits for the db to be ready
+COPY --chown=yllorca:yllorca create-multiple-postgres-databases.sh /docker-entrypoint-initdb.d/
+RUN chmod +x /docker-entrypoint-initdb.d/create-multiple-postgres-databases.sh
+
+USER yllorca
+
+# This script will run before every command executed in the container
+ENTRYPOINT ["create-multiple-postgres-databases.sh"]
