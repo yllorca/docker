@@ -1,9 +1,7 @@
 version: '3.3'
 services:
     db:
-        build:
-            context: ../db
-            dockerfile: Dockerfile.db
+        image: postgres:9.6
         restart: always
         expose:
             - 5432
