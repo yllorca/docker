@@ -20,7 +20,7 @@ services:
             - 5432
         volumes:
             - ../db/psql-init/db.sql:/docker-entrypoint-initdb.d/db-bot.sql
-            - postgres_data_bot:/var/lib/postgresql/data/bot/
+            - postgres_data_bot:/var/lib/postgresql/bot/data/
     nginx-proxy:
         image: jwilder/nginx-proxy
         restart: always
