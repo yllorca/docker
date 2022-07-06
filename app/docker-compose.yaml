@@ -4,23 +4,13 @@ services:
         image: postgres
         restart: always
         env_file: 
-            - ../../autodir/autoweb/.env
+            - ./db/.env-db
         expose:
             - 5432
         volumes:
-            - ../db/psql-init/db.sql:/docker-entrypoint-initdb.d/db.sql
+            - ./db/create-multiple-postgres-databases.sh:/docker-entrypoint-initdb.d/create-multiple-postgres-databases.sh
             - postgres_data:/var/lib/postgresql/data/
 
-    db_bot:
-        image: postgres
-        restart: always
-        env_file: 
-            - ../../botdir/alpacabot/.env
-        expose:
-            - 5432
-        volumes:
-            - ../db/psql-init/db.sql:/docker-entrypoint-initdb.d/db-bot.sql
-            - postgres_data_bot:/var/lib/postgresql/bot/data/
     nginx-proxy:
         image: jwilder/nginx-proxy
         restart: always
@@ -76,7 +66,7 @@ services:
             - static_alpaca_bot:/home/yllorca/botdir/static_cdn/
         restart: always
         depends_on:
-            - db_bot
+            - db
     nginx:
         build:
             context: ../nginx
@@ -91,7 +81,6 @@ services:
         volumes:
             - ../../autodir/autoweb/static_cdn:/home/yllorca/autoweb/static_cdn/
 volumes:
-    postgres_data_bot:
     postgres_data:
     static_cdn:
         external: true
