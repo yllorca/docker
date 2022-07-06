@@ -76,6 +76,7 @@ services:
         restart: always
         depends_on:
             - autoweb
+            - alpacabot
             - nginx-proxy
             - letsencrypt
         volumes:
