@@ -3,7 +3,9 @@ services:
     db:
         image: postgres
         restart: always
-        env_file: ../../autodir/autoweb/.env
+        env_file: 
+            - ../../autodir/autoweb/.env
+            - ../../botdir/alpacabot/.env
         expose:
             - 5432
         volumes:
